@@ -2,9 +2,7 @@
   "name": "tab-time-notify",
   "version": "1.0.0",
   "scripts": {
-    "b": "vite build -w false",
-    "w": "vite build -w true",
-    "check": "svelte-check --threshold error"
+    "b-cs": "vite -c vite-content-scripts.config.mts build -w false"
   },
   "type": "module",
   "dependencies": {
