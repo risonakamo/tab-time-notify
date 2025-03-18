@@ -2,7 +2,7 @@
   "name": "tab-time-notify",
   "version": "1.0.0",
   "scripts": {
-    "b-cs": "vite -c vite-content-scripts.config.mts build -w false"
+    "b-cs": "vite build -w false"
   },
   "type": "module",
   "dependencies": {

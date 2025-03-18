@@ -10,9 +10,7 @@ type SvelteWarningHandler=(warning:Warning)=>void
 declare const __dirname:string;
 
 export default defineConfig({
-    root:`${__dirname}/web/html`,
     mode:"development",
-    base:"",
 
     plugins:[
         svelte({
@@ -40,17 +38,22 @@ export default defineConfig({
     },
 
     build:{
-        outDir:`${__dirname}/build`,
+        lib:{
+            name:"tab_time_notify",
+            fileName:"tab-time-notify",
+            entry:{
+                e1:`${__dirname}/web/content-scripts/test.ts`,
+            },
+            formats:["iife"]
+        },
+
+        outDir:`${__dirname}/build-content-scripts`,
         target:["esnext"],
         sourcemap:true,
         // emptyOutDir:true,
         minify:false,
 
         rollupOptions:{
-            input:{
-                // "popup":`${__dirname}/web/html/popup.html`,
-            },
-
             onLog(level:LogLevel,log:RollupLog,handler:LogHandler):void
             {
                 if (log.message.includes("Error when using sourcemap for reporting"))
