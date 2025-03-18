@@ -1,0 +1,9 @@
+{
+    "name":"Tab Time Notify",
+    "short_name":"tab_notify",
+    "description":"Notify on Tab Time Usage",
+    "version":"1.0.0",
+    "homepage_url":"https://github.com/risonakamo/tab-time-notify",
+    "manifest_version":3,
+    "author":"risonakamo"
+}
