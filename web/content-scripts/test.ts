@@ -1,18 +1,10 @@
 import { mount } from "svelte";
 
-import TestThing from "@/components/test-thing/test-thing.svelte";
+import TabTimer from "@/components/tab-timer/tab-timer.svelte";
 
 function main():void
 {
-    console.log("hello");
-
-    const zone=document.createElement("div");
-    console.log(document.body);
-    document.body.insertAdjacentElement("beforeend",zone);
-    console.log(document.body);
-
-    mount(TestThing,{target:zone});
-    console.log("done mount");
+    mount(TabTimer,{target:document.body});
 }
 
 main();
