@@ -47,7 +47,7 @@ export default defineConfig({
             formats:["iife"]
         },
 
-        outDir:`${__dirname}/build-content-scripts`,
+        outDir:`${__dirname}/build`,
         target:["esnext"],
         sourcemap:true,
         // emptyOutDir:true,

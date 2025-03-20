@@ -12,8 +12,8 @@
             "matches": [
                 "https://vite.dev/guide/*"
             ],
-            "js": ["build-content-scripts/tab-time-notify.iife.js"],
-            "css":["build-content-scripts/tab-time-notify.css"],
+            "js": ["build/tab-time-notify.iife.js"],
+            "css":["build/tab-time-notify.css"],
             "run_at": "document_end"
         }
     ]
