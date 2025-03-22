@@ -17,6 +17,12 @@ importers:
       '@types/chrome':
         specifier: ^0.0.309
         version: 0.0.309
+      '@types/driftless':
+        specifier: ^2.0.4
+        version: 2.0.4
+      driftless:
+        specifier: ^2.0.3
+        version: 2.0.3
       rollup:
         specifier: ^4.36.0
         version: 4.36.0
@@ -427,6 +433,9 @@ packages:
   '@types/chrome@0.0.309':
     resolution: {integrity: sha512-ZFADzcp8b+roUrux68U8pti4cmNOLJXWkShk8lfxj9SBcjYqpJt7NypBprSJUJDJVakGZgd2Tt00QePIGh7oPA==}
 
+  '@types/driftless@2.0.4':
+    resolution: {integrity: sha512-dOQ48Cb6Cw9s7mRG6vIAQOKWU3QDTb0f4Knwo05RQvOt+CWUzlq/9ti35siXtmFIZlhvtBUjM/X/TAsmdtqotg==}
+
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
@@ -485,6 +494,9 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
+
+  driftless@2.0.3:
+    resolution: {integrity: sha512-hSDKsQphnL4O0XLAiyWQ8EiM9suXH0Qd4gMtwF86b5wygGV8r95w0JcA38FOmx9N3LjFCIHLG2winLPNken4Tg==}
 
   esbuild@0.25.1:
     resolution: {integrity: sha512-BGO5LtrGC7vxnqucAe/rmvKdJllfGaYWdyABvyMoXQlfYMb2bbRuReWR5tEGE//4LcNJj9XrkovTqNYRFZHAMQ==}
@@ -589,6 +601,9 @@ packages:
   postcss@8.5.3:
     resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
     engines: {node: ^10 || ^12 || >=14}
+
+  present@0.0.3:
+    resolution: {integrity: sha512-d0QMXYTKHuAO0n0IfI/x2lbNwybdNWjRQ08hQySzqMQ2M0gwh/IetTv2glkPJihFn+cMDYjK/BiVgcLcjsASgg==}
 
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
@@ -1012,6 +1027,8 @@ snapshots:
       '@types/filesystem': 0.0.36
       '@types/har-format': 1.2.16
 
+  '@types/driftless@2.0.4': {}
+
   '@types/estree@1.0.6': {}
 
   '@types/filesystem@0.0.36':
@@ -1049,6 +1066,10 @@ snapshots:
 
   detect-libc@1.0.3:
     optional: true
+
+  driftless@2.0.3:
+    dependencies:
+      present: 0.0.3
 
   esbuild@0.25.1:
     optionalDependencies:
@@ -1159,6 +1180,8 @@ snapshots:
       nanoid: 3.3.10
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  present@0.0.3: {}
 
   readdirp@4.1.2: {}
 

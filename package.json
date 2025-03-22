@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "scripts": {
     "b": "vite build -w false",
-    "w":"vite build -w true"
+    "w": "vite build -w true"
   },
   "type": "module",
   "dependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tsconfig/svelte": "^5.0.4",
     "@types/chrome": "^0.0.309",
+    "@types/driftless": "^2.0.4",
+    "driftless": "^2.0.3",
     "rollup": "^4.36.0",
     "sass": "^1.86.0",
     "svelte": "^5.23.2",

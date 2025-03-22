@@ -34,15 +34,15 @@
                 font-size: 14px
 
     &.notifying
+        border-width: 10px
+        animation: flashing 2s steps(1) infinite
+
         @keyframes flashing
             0%,49%
                 border-color: black
 
             50%,100%
                 border-color: red
-
-        border-width: 10px
-        animation: flashing 2s steps(1) infinite
 
     &.hidden
         display: none

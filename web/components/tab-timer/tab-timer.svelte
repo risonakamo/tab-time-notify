@@ -1,5 +1,6 @@
 <script lang="ts">
 import {onMount} from "svelte";
+import {setDriftlessInterval} from "driftless";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
 
@@ -53,7 +54,7 @@ var totalActiveText:string=$derived(secondsToDuration(totalActiveSeconds));
 onMount(()=>{
     generateNotificationTime();
 
-    setInterval(()=>{
+    setDriftlessInterval(()=>{
         if (disabled)
         {
             return;
