@@ -10,7 +10,7 @@
     "content_scripts": [
         {
             "matches": [
-                "https://vite.dev/guide/*"
+                "https://www.youtube.com/watch*"
             ],
             "js": ["build/tab-time-notify.iife.js"],
             "css":["build/tab-time-notify.css"],

@@ -8,8 +8,8 @@ import {secondsToDuration, timeDiff} from "@/lib/time";
 // notification will occur after a random amount of seconds
 // const minNotificationTime:number=3*60;
 // const maxNotificationTime:number=4*60;
-const minNotificationTime:number=3;
-const maxNotificationTime:number=5;
+const minNotificationTime:number=1;
+const maxNotificationTime:number=3;
 
 
 // --- other const
@@ -163,8 +163,12 @@ function onDismissForever():void
     </div>
 
     <div class="button-zone">
-        <p><a href="javascript:void(0)" onclick={onDismiss}>Dismiss</a></p>
-        <p><a href="javascript:void(0)" onclick={onDismissForever}>Dismiss forever</a></p>
+        <p class="dismiss">
+            <a href="javascript:void(0)" onclick={onDismiss}>Dismiss</a>
+        </p>
+        <p class="dismiss2">
+            <a href="javascript:void(0)" onclick={onDismissForever}>Dismiss forever</a>
+        </p>
     </div>
 </div>
 
