@@ -1,15 +1,22 @@
 <script lang="ts">
 import {onMount} from "svelte";
 
-import {secondsToDuration} from "@/lib/time";
+import {secondsToDuration, timeDiff} from "@/lib/time";
 
+// --- config
 // notification will occur after a random amount of minutes (float)
-const minNotificationTime:number=3;
-const maxNotificationTime:number=4;
+// const minNotificationTime:number=3;
+// const maxNotificationTime:number=4;
+const minNotificationTime:number=.1;
+const maxNotificationTime:number=.5;
 
+
+// --- other const
 /** time tab was created */
-var createTime:string=$state(new Date().toISOString());
+const createTime:Date=new Date();
 
+
+// --- state
 /** total time tab has been active for */
 var totalActiveSeconds:number=$state(0);
 /** total active seconds since last notification */
@@ -19,8 +26,19 @@ var activeSecondsSinceNotify:number=$state(0);
 var notificationTime:number=$state(-1);
 
 /** if tab is active or not */
-var tabActive:boolean=$state(false);
+var tabActive:boolean=$state(true);
 
+/** total time this since this tab was created (including when it is inactive) */
+var totalTabLifeText:string=$state("00:00");
+
+/** if this timer window is showing */
+var windowShowing:boolean=$state(true);
+
+/** notification was triggered and is in progress */
+var notificationActive:boolean=$state(false);
+
+
+// --- derived
 // text versions of various timers
 var activeSinceNotifyText:string=$derived(secondsToDuration(activeSecondsSinceNotify));
 var totalActiveText:string=$derived(secondsToDuration(totalActiveSeconds));
@@ -30,10 +48,22 @@ onMount(()=>{
     generateNotificationTime();
 
     setInterval(()=>{
+        totalTabLifeText=timeDiff(new Date(),createTime);
+
         if (tabActive)
         {
             totalActiveSeconds++;
             activeSecondsSinceNotify++;
+        }
+
+        // trigger notify once time since last notify above the notify time,
+        // but only if notify time is above 0, and a notification is not already active
+        if (notificationTime>0
+            && !notificationActive
+            && activeSecondsSinceNotify>=notificationTime
+        )
+        {
+            triggerNotify();
         }
     },1000);
 });
@@ -47,16 +77,38 @@ function generateNotificationTime():void
     notificationTime=Math.floor(randMinutes*60);
 }
 
+/** trigger notification. sets window to be showing, and notification is active */
+function triggerNotify():void
+{
+    windowShowing=true;
+    notificationActive=true;
+}
+
 /** when defocused, set not active */
-function windowBlur():void
+function onWindowBlur():void
 {
     tabActive=false;
 }
 
 /** on focus, set active */
-function windowFocus():void
+function onWindowFocus():void
 {
     tabActive=true;
+}
+
+/** clicked dismiss button. hide the window.
+ *  if notification was active, also generate a new notification time, and reset
+ *  the time since last notification */
+function onDismiss():void
+{
+    if (notificationActive)
+    {
+        activeSecondsSinceNotify=0;
+        generateNotificationTime();
+        notificationActive=false;
+    }
+
+    windowShowing=false;
 }
 </script>
 
@@ -64,7 +116,7 @@ function windowFocus():void
     @use "./tab-timer.sass"
 </style>
 
-<div class="tab-timer">
+<div class="tab-timer" class:notifying={notificationActive}>
     <div class="timer-zone">
         <p>Active tab time since last notification</p>
         <div class="timer">
@@ -84,7 +136,7 @@ function windowFocus():void
         </div>
         <div class="mini-stat">
             <p class="title">Total tab lifetime</p>
-            <p class="value">10:33</p>
+            <p class="value">{totalTabLifeText}</p>
         </div>
     </div>
 
@@ -94,4 +146,4 @@ function windowFocus():void
     </div>
 </div>
 
-<svelte:window onblur={windowBlur} onfocus={windowFocus}/>
+<svelte:window onblur={onWindowBlur} onfocus={onWindowFocus}/>
