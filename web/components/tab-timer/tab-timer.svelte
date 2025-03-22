@@ -8,7 +8,7 @@ import {secondsToDuration, timeDiff} from "@/lib/time";
 // const minNotificationTime:number=3*60;
 // const maxNotificationTime:number=4*60;
 const minNotificationTime:number=3;
-const maxNotificationTime:number=15;
+const maxNotificationTime:number=5;
 
 
 // --- other const
@@ -32,10 +32,16 @@ var tabActive:boolean=$state(true);
 var totalTabLifeText:string=$state("00:00");
 
 /** if this timer window is showing */
-var windowShowing:boolean=$state(true);
+var windowShowing:boolean=$state(false);
 
 /** notification was triggered and is in progress */
 var notificationActive:boolean=$state(false);
+
+/** number of active notifications dismissed */
+var notificationsDismissed:number=$state(0);
+
+/** if this timer is fully disabled */
+var disabled:boolean=$state(false);
 
 
 // --- derived
@@ -48,6 +54,11 @@ onMount(()=>{
     generateNotificationTime();
 
     setInterval(()=>{
+        if (disabled)
+        {
+            return;
+        }
+
         totalTabLifeText=timeDiff(new Date(),createTime);
 
         if (tabActive)
@@ -106,9 +117,19 @@ function onDismiss():void
         activeSecondsSinceNotify=0;
         generateNotificationTime();
         notificationActive=false;
+        notificationsDismissed++;
     }
 
     windowShowing=false;
+}
+
+/** clicked dismiss forever button. dismiss window so that it doesnt come back */
+function onDismissForever():void
+{
+    disabled=true;
+    windowShowing=false;
+    notificationTime=-1;
+    notificationActive=false;
 }
 </script>
 
@@ -116,15 +137,15 @@ function onDismiss():void
     @use "./tab-timer.sass"
 </style>
 
-<div class="tab-timer" class:notifying={notificationActive}>
+<div class="tab-timer" class:notifying={notificationActive} class:hidden={!windowShowing}>
     <div class="timer-zone">
-        <p>Active tab time since last notification</p>
+        <p>Time since last notification</p>
         <div class="timer">
             {activeSinceNotifyText}
         </div>
     </div>
     <div class="timer-zone">
-        <p>Total active tab time</p>
+        <p>Total tab time</p>
         <div class="timer">
             {totalActiveText}
         </div>
@@ -132,7 +153,7 @@ function onDismiss():void
     <div class="mini-stats">
         <div class="mini-stat">
             <p class="title">Notifications dismissed</p>
-            <p class="value">3</p>
+            <p class="value">{notificationsDismissed}</p>
         </div>
         <div class="mini-stat">
             <p class="title">Total tab lifetime</p>
@@ -141,8 +162,8 @@ function onDismiss():void
     </div>
 
     <div class="button-zone">
-        <p><a href="">Dismiss</a></p>
-        <p><a href="">Dismiss forever</a></p>
+        <p><a href="javascript:void(0)" onclick={onDismiss}>Dismiss</a></p>
+        <p><a href="javascript:void(0)" onclick={onDismissForever}>Dismiss forever</a></p>
     </div>
 </div>
 
