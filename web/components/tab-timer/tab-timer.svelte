@@ -4,11 +4,11 @@ import {onMount} from "svelte";
 import {secondsToDuration, timeDiff} from "@/lib/time";
 
 // --- config
-// notification will occur after a random amount of minutes (float)
-// const minNotificationTime:number=3;
-// const maxNotificationTime:number=4;
-const minNotificationTime:number=.1;
-const maxNotificationTime:number=.5;
+// notification will occur after a random amount of seconds
+// const minNotificationTime:number=3*60;
+// const maxNotificationTime:number=4*60;
+const minNotificationTime:number=3;
+const maxNotificationTime:number=15;
 
 
 // --- other const
@@ -71,10 +71,10 @@ onMount(()=>{
 /** set the next notification time to a new random value */
 function generateNotificationTime():void
 {
-    const randMinutes:number=Math.random()*
+    const randSeconds:number=Math.random()*
         (maxNotificationTime-minNotificationTime)+minNotificationTime;
 
-    notificationTime=Math.floor(randMinutes*60);
+    notificationTime=Math.floor(randSeconds);
 }
 
 /** trigger notification. sets window to be showing, and notification is active */
