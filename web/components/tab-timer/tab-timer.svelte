@@ -6,10 +6,10 @@ import {secondsToDuration, timeDiff} from "@/lib/time";
 
 // --- config
 // notification will occur after a random amount of seconds
-// const minNotificationTime:number=3*60;
-// const maxNotificationTime:number=4*60;
-const minNotificationTime:number=1;
-const maxNotificationTime:number=3;
+const minNotificationTime:number=3*60;
+const maxNotificationTime:number=4*60;
+// const minNotificationTime:number=1;
+// const maxNotificationTime:number=3;
 
 
 // --- other const
