@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "b": "vite build -w false",
-    "w": "vite build -w true"
+    "w": "vite build -w true",
+    "check":"svelte-check --threshold error"
   },
   "type": "module",
   "dependencies": {
