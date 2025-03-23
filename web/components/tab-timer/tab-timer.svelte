@@ -8,8 +8,8 @@ import {secondsToDuration, timeDiff} from "@/lib/time";
 // notification will occur after a random amount of seconds
 const minNotificationTime:number=3*60;
 const maxNotificationTime:number=4*60;
-// const minNotificationTime:number=1;
-// const maxNotificationTime:number=3;
+// const minNotificationTime:number=5;
+// const maxNotificationTime:number=10;
 
 
 // --- other const
@@ -55,6 +55,9 @@ onMount(()=>{
     generateNotificationTime();
 
     setDriftlessInterval(()=>{
+        console.log("since notify",activeSecondsSinceNotify);
+        console.log("notify time",notificationTime);
+
         if (disabled)
         {
             return;

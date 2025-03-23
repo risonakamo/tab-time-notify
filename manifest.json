@@ -10,7 +10,8 @@
     "content_scripts": [
         {
             "matches": [
-                "https://www.youtube.com/watch*"
+                "https://www.youtube.com/*",
+                "https://www.twitch.tv/*"
             ],
             "js": ["build/tab-time-notify.iife.js"],
             "css":["build/tab-time-notify.css"],
