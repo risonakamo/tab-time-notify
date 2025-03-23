@@ -1,6 +1,6 @@
 <script lang="ts">
 import {onMount} from "svelte";
-import {setDriftlessInterval} from "driftless";
+import {setDriftlessInterval,clearDriftless} from "driftless";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
 
@@ -16,6 +16,8 @@ const maxNotificationTime:number=4*60;
 /** time tab was created */
 const createTime:Date=new Date();
 
+/** the main ticker */
+var tickerTimer:number|null=null;
 
 // --- state
 /** total time tab has been active for */
@@ -50,16 +52,64 @@ var disabled:boolean=$state(false);
 var activeSinceNotifyText:string=$derived(secondsToDuration(activeSecondsSinceNotify));
 var totalActiveText:string=$derived(secondsToDuration(totalActiveSeconds));
 
-// deploy the timer
+// generate a notification time. then, if the document is showing,
+// start the ticker
 onMount(()=>{
     generateNotificationTime();
 
-    setDriftlessInterval(()=>{
-        console.log("since notify",activeSecondsSinceNotify);
-        console.log("notify time",notificationTime);
+    if (!document.hidden)
+    {
+        startTimer();
+    }
+});
+
+
+// --- funcs
+/** set the next notification time to a new random value */
+function generateNotificationTime():void
+{
+    const randSeconds:number=Math.random()*
+        (maxNotificationTime-minNotificationTime)+minNotificationTime;
+
+    notificationTime=Math.floor(randSeconds);
+}
+
+/** trigger notification. sets window to be showing, and notification is active */
+function triggerNotify():void
+{
+    windowShowing=true;
+    notificationActive=true;
+}
+
+/** deploy the main interval action timer. clears resets the previous
+ *  timer if it was active */
+function startTimer():void
+{
+    console.log("timer starting");
+
+    if (tickerTimer!=null)
+    {
+        clearDriftless(tickerTimer);
+    }
+
+    // timer executing periodic actions.
+    // periodic actions include incrementing the active timers. thus,
+    // this timer should only execute if the tab is active.
+    // this timer is safe to be destroyed anytime, and should be destroyed
+    // when the tab is not active. it does not need to tick in an inactive
+    // tab.
+    tickerTimer=setDriftlessInterval(()=>{
+        console.log("timer:",activeSecondsSinceNotify,"/",notificationTime);
 
         if (disabled)
         {
+            return;
+        }
+
+        // extra check to abort timer if defocused
+        if (document.hidden)
+        {
+            onWindowBlur();
             return;
         }
 
@@ -81,34 +131,34 @@ onMount(()=>{
             triggerNotify();
         }
     },1000);
-});
-
-/** set the next notification time to a new random value */
-function generateNotificationTime():void
-{
-    const randSeconds:number=Math.random()*
-        (maxNotificationTime-minNotificationTime)+minNotificationTime;
-
-    notificationTime=Math.floor(randSeconds);
 }
 
-/** trigger notification. sets window to be showing, and notification is active */
-function triggerNotify():void
+/** stop the ticker */
+function stopTimer():void
 {
-    windowShowing=true;
-    notificationActive=true;
+    console.log("timer ending");
+
+    if (tickerTimer!=null)
+    {
+        clearDriftless(tickerTimer);
+        tickerTimer=null;
+    }
 }
 
-/** when defocused, set not active */
+
+// --- handlers
+/** when defocused, set not active. also, disable the timer */
 function onWindowBlur():void
 {
     tabActive=false;
+    stopTimer();
 }
 
-/** on focus, set active */
+/** on focus, set active. reenable the timer. */
 function onWindowFocus():void
 {
     tabActive=true;
+    startTimer();
 }
 
 /** clicked dismiss button. hide the window.
@@ -134,6 +184,22 @@ function onDismissForever():void
     windowShowing=false;
     notificationTime=-1;
     notificationActive=false;
+}
+
+/** document visibility changing. trigger window blur or focus. might double
+ *  up calling, but this is ok? maybe not. if not, maybe remove the window
+ *  focus/blur */
+function onDocumentVisChange():void
+{
+    if (document.hidden)
+    {
+        onWindowBlur();
+    }
+
+    else
+    {
+        onWindowFocus();
+    }
 }
 </script>
 
@@ -176,3 +242,4 @@ function onDismissForever():void
 </div>
 
 <svelte:window onblur={onWindowBlur} onfocus={onWindowFocus}/>
+<svelte:document onvisibilitychange={onDocumentVisChange}/>
