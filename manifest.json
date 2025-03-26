@@ -11,7 +11,8 @@
         {
             "matches": [
                 "https://www.youtube.com/*",
-                "https://www.twitch.tv/*"
+                "https://www.twitch.tv/*",
+                "https://vite.dev/guide/*"
             ],
             "js": ["build/tab-time-notify.iife.js"],
             "css":["build/tab-time-notify.css"],

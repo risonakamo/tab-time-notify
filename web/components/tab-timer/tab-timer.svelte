@@ -201,6 +201,18 @@ function onDocumentVisChange():void
         onWindowFocus();
     }
 }
+
+/** clicked reset button. dismisses the window, but also resets a bunch of active timer stats */
+function onReset():void
+{
+    totalActiveSeconds=0;
+    activeSecondsSinceNotify=0;
+    notificationActive=false;
+    notificationsDismissed=0;
+    windowShowing=false;
+
+    generateNotificationTime();
+}
 </script>
 
 <style lang="sass">
@@ -239,6 +251,9 @@ function onDocumentVisChange():void
         <div class="button-zone">
             <p class="dismiss">
                 <a href="javascript:void(0)" onclick={onDismiss}>Dismiss</a>
+            </p>
+            <p class="dismiss2">
+                <a href="javascript:void(0)" onclick={onReset}>Dismiss (reset)</a>
             </p>
             <p class="dismiss2">
                 <a href="javascript:void(0)" onclick={onDismissForever}>Dismiss forever</a>
