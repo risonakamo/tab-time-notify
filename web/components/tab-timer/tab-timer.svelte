@@ -6,10 +6,10 @@ import {secondsToDuration, timeDiff} from "@/lib/time";
 
 // --- config
 // notification will occur after a random amount of seconds
-const minNotificationTime:number=3*60;
-const maxNotificationTime:number=4*60;
-// const minNotificationTime:number=2;
-// const maxNotificationTime:number=3;
+// const minNotificationTime:number=3*60;
+// const maxNotificationTime:number=4*60;
+const minNotificationTime:number=2;
+const maxNotificationTime:number=3;
 
 
 // --- other const
@@ -226,13 +226,13 @@ function onReset():void
 
     <div class="timer-window" class:notifying={notificationActive} class:hidden={!windowShowing}>
         <div class="timer-zone">
-            <p>Time since last notification</p>
+            <p class="label">Since the last popup...</p>
             <div class="timer">
                 {activeSinceNotifyText}
             </div>
         </div>
         <div class="timer-zone">
-            <p>Total tab time</p>
+            <p class="label">Total watchtime...</p>
             <div class="timer">
                 {totalActiveText}
             </div>
@@ -249,6 +249,10 @@ function onReset():void
         </div>
 
         <div class="button-zone">
+            <div class="button-22">
+                Dismiss
+            </div>
+
             <p class="dismiss">
                 <a href="javascript:void(0)" onclick={onDismiss}>Dismiss</a>
             </p>

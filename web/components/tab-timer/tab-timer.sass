@@ -5,6 +5,7 @@
     top: 0
     left: 0
     pointer-events: none
+    font-family: roboto, arial
 
     .indicator
         pointer-events: none
@@ -21,27 +22,36 @@
             color: yellow
 
     .timer-window
+        --initial-border-color: #621f1f
+
         pointer-events: auto
         position: fixed
         z-index: 1000
         bottom: 10px
         right: 10px
-        width: 370px
-        height: 240px
-        background: white
-        border: 1px solid black
+        width: 500px
+        height: 500px
+        border: 7px solid var(--initial-border-color)
         padding: 5px 10px
         box-sizing: border-box
+        background: #742c2c
+        color: white
+        border-radius: 10px
 
         .timer-zone
-            margin-bottom: 4px
+            margin-bottom: 7px
 
-            p
+            .label
                 font-size: 12px
                 margin: 0
+                margin-bottom: 1px
 
             .timer
                 font-size: 24px
+                font-weight: 500
+                background: #570f0f8f
+                padding: 2px 5px
+                border-radius: 4px
 
         .mini-stat
             display: inline-block
@@ -67,15 +77,14 @@
                 font-size: 12px
 
         &.notifying
-            border-width: 10px
             animation: flashing 2s steps(1) infinite
 
             @keyframes flashing
                 0%,49%
-                    border-color: black
+                    border-color: var(--initial-border-color)
 
                 50%,100%
-                    border-color: red
+                    border-color: #ec165d
 
         &.hidden
             display: none
