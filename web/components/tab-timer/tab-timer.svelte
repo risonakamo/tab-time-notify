@@ -249,19 +249,17 @@ function onReset():void
         </div>
 
         <div class="button-zone">
-            <div class="button-22">
+            <div class="button-22" onclick={onDismiss}>
                 Dismiss
             </div>
 
-            <p class="dismiss">
-                <a href="javascript:void(0)" onclick={onDismiss}>Dismiss</a>
-            </p>
-            <p class="dismiss2">
-                <a href="javascript:void(0)" onclick={onReset}>Dismiss (reset)</a>
-            </p>
-            <p class="dismiss2">
-                <a href="javascript:void(0)" onclick={onDismissForever}>Dismiss forever</a>
-            </p>
+            <div class="button-22" onclick={onReset}>
+                Dismiss (reset)
+            </div>
+
+            <div class="button-22" onclick={onDismissForever}>
+                Dismiss Forever
+            </div>
         </div>
     </div>
 </div>
