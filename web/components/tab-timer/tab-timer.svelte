@@ -6,10 +6,10 @@ import {secondsToDuration, timeDiff} from "@/lib/time";
 
 // --- config
 // notification will occur after a random amount of seconds
-// const minNotificationTime:number=3*60;
-// const maxNotificationTime:number=4*60;
-const minNotificationTime:number=2;
-const maxNotificationTime:number=3;
+const minNotificationTime:number=3*60;
+const maxNotificationTime:number=4*60;
+// const minNotificationTime:number=2;
+// const maxNotificationTime:number=3;
 
 
 // --- other const
@@ -237,6 +237,12 @@ function onReset():void
                 {totalActiveText}
             </div>
         </div>
+        <div class="timer-zone">
+            <p class="label">Watchtime for today...</p>
+            <div class="timer">
+                20:00
+            </div>
+        </div>
         <div class="mini-stats">
             <div class="mini-stat">
                 <p class="title">Notifications dismissed</p>
@@ -253,12 +259,14 @@ function onReset():void
                 Dismiss
             </div>
 
-            <div class="button-22" onclick={onReset}>
-                Dismiss (reset)
-            </div>
+            <div class="button-row">
+                <div class="button-22 half first" onclick={onReset}>
+                    Dismiss (reset)
+                </div>
 
-            <div class="button-22" onclick={onDismissForever}>
-                Dismiss Forever
+                <div class="button-22 half" onclick={onDismissForever}>
+                    Dismiss Forever
+                </div>
             </div>
         </div>
     </div>

@@ -29,8 +29,8 @@
         z-index: 1000
         bottom: 10px
         right: 10px
-        width: 500px
-        height: 500px
+        width: 330px
+        height: 305px
         border: 7px solid var(--initial-border-color)
         padding: 5px 10px
         box-sizing: border-box
@@ -66,12 +66,16 @@
 
                 &.value
                     font-size: 14px
+                    font-weight: 500
 
         .button-zone
             line-height: 1.2
 
+            .button-row
+                display: flex
+
             .button-22
-                font-size: 16px
+                font-size: 14px
                 font-weight: 500
                 background: #29171778
                 padding: 7px 0
@@ -80,6 +84,12 @@
                 margin-bottom: 4px
                 user-select: none
                 cursor: pointer
+
+                &.half
+                    flex: 1
+
+                    &.first
+                        margin-right: 10px
 
                 &:hover
                     background: #2912124d
