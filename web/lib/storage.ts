@@ -60,7 +60,7 @@ function wentPastDate(
     const prevIsBefore:boolean=previousDate.getTime()<=targetDate.getTime();
 
     // then, the now date must be after the target date
-    const nowisAfter:boolean=nowDate.getTime()>targetDate.getTime();
+    const nowisAfter:boolean=nowDate.getTime()>=targetDate.getTime();
 
     return nowisAfter && prevIsBefore;
 }
@@ -80,16 +80,42 @@ function generateResetTime(hour:number):Date
     return resetDate;
 }
 
+
+
+
+
 export function test_wentPastDate():void
 {
     const triggerDate:Date=new Date("2025-03-02T06:00");
 
-    const date1:Date=new Date("2025-03-02T12:03");
-    const date2:Date=new Date("2025-03-02T05:00");
-    const date3:Date=new Date("2025-03-02T21:03");
-    const date4:Date=new Date("2025-03-03T02:03");
+    function testDate(date1:Date,date2:Date,result:boolean):void
+    {
+        if (!(wentPastDate(
+            date1,
+            date2,
+            triggerDate,
+        )==result))
+        {
+            console.error(`failed: ${date1} -> ${date2}`);
+            console.log("should have been:",result);
+        }
+    }
 
-    console.log(wentPastDate(date2,date1,triggerDate));
-    console.log(wentPastDate(date3,date4,triggerDate));
-    console.log(wentPastDate(date2,date4,triggerDate));
+    console.log("test start");
+    testDate(new Date("2025-03-02T05:00"), new Date("2025-03-02T12:03"), true);
+    testDate(new Date("2025-03-02T21:03"), new Date("2025-03-03T02:03"), false);
+    testDate(new Date("2025-03-02T05:00"), new Date("2025-03-03T02:03"), true);
+    testDate(new Date("2025-03-02T01:00"), new Date("2025-03-02T05:00"), false);
+    testDate(new Date("2025-03-01T23:00"), new Date("2025-03-02T01:00"), false);
+    testDate(new Date("2025-03-02T05:00"), new Date("2025-03-02T06:01"), true); // passes trigger by 1 min
+    testDate(new Date("2025-03-02T00:00"), new Date("2025-03-02T06:00"), true); // ends exactly at trigger
+    testDate(new Date("2025-03-01T22:00"), new Date("2025-03-02T08:00"), true); // long span, passes trigger
+    testDate(new Date("2025-03-02T05:59"), new Date("2025-03-02T06:00"), true); // ends exactly at trigger
+    testDate(new Date("2025-03-02T06:00"), new Date("2025-03-02T06:01"), true); // starts exactly at trigger
+    testDate(new Date("2025-03-02T00:00"), new Date("2025-03-02T05:59"), false); // ends before trigger
+    testDate(new Date("2025-03-01T12:00"), new Date("2025-03-01T23:59"), false); // completely before trigger day
+    testDate(new Date("2025-03-02T06:01"), new Date("2025-03-02T07:00"), false); // starts after trigger
+    testDate(new Date("2025-03-03T00:00"), new Date("2025-03-03T12:00"), false); // completely after trigger day
+    testDate(new Date("2025-03-02T06:00"), new Date("2025-03-02T06:00"), true); // exact match, no duration
+    console.log("test end");
 }

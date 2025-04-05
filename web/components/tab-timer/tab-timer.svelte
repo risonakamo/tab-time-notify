@@ -3,7 +3,7 @@ import {onMount} from "svelte";
 import {setDriftlessInterval,clearDriftless} from "driftless";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
-import {test_wentPastDate} from "@/lib/storage";
+// import {test_wentPastDate} from "@/lib/storage";
 
 // --- config
 // notification will occur after a random amount of seconds
@@ -63,7 +63,7 @@ onMount(()=>{
         startTimer();
     }
 
-    test_wentPastDate();
+    // test_wentPastDate();
 });
 
 
