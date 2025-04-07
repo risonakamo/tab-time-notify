@@ -1,25 +1,23 @@
 // storage related funcs
 
+// the 24hr time hour at which reset will occur
+const ResetHour:number=6;
+
 /** storage initial state */
 const storageDefault:ExtStorage={
-    lastDailyTimeUpdate:new Date(),
     dailyTime:0,
+
+    // initialise reset time to some time in the future
+    resetTime:generateResetTime(ResetHour),
 };
 
-/** the reset time */
-const resetTime:Date=generateResetTime(6);
-
-/** add to daily time value of storage. also sets the last
- *  update time */
+/** add to daily time value of storage */
 async function addToDailyTime(amount:number):Promise<void>
 {
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
 
-    dailyResetCheck(storage);
-
     storage.dailyTime+=amount;
-    storage.lastDailyTimeUpdate=new Date();
 
     chrome.storage.local.set(storage);
 }
@@ -30,22 +28,32 @@ async function getDailyTime():Promise<number>
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
 
-    dailyResetCheck(storage);
-
     return storage.dailyTime;
 }
 
-/** checks if the storage time should be reset. returns the possibly
- * modified storage */
-function dailyResetCheck(storage:ExtStorage):ExtStorage
+/** trigger reset of daily time. generates a new reset time in the future */
+async function resetTime():Promise<void>
 {
-    if (wentPastDate(storage.lastDailyTimeUpdate,new Date(),resetTime))
-    {
-        storage.dailyTime=0;
-        storage.lastDailyTimeUpdate=new Date();
-    }
+    const storage:ExtStorage=await chrome.storage
+        .local.get(storageDefault);
 
-    return storage;
+    storage.dailyTime=0;
+    storage.resetTime=generateResetTime(ResetHour);
+
+    chrome.storage.local.set(storage);
+}
+
+/** check if should reset the daily time due to being past the reset date. if so,
+ *  do the reset. */
+async function checkResetTime():Promise<void>
+{
+    const storage:ExtStorage=await chrome.storage
+        .local.get(storageDefault);
+
+    if (new Date().getTime()>=storage.resetTime.getTime())
+    {
+        return resetTime();
+    }
 }
 
 /** given 2 dates and a target date, determine if within this time span,
