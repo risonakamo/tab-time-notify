@@ -4,7 +4,7 @@
 const ResetHour:number=6;
 
 /** storage initial state */
-const storageDefault:ExtStorage={
+export const storageDefault:ExtStorage={
     dailyTime:0,
 
     // initialise reset time to some time in the future
@@ -12,14 +12,14 @@ const storageDefault:ExtStorage={
 };
 
 /** add to daily time value of storage */
-async function addToDailyTime(amount:number):Promise<void>
+export async function addToDailyTime(amount:number):Promise<void>
 {
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
 
     storage.dailyTime+=amount;
 
-    chrome.storage.local.set(storage);
+    return chrome.storage.local.set(storage);
 }
 
 /** get the current daily time */
@@ -34,6 +34,8 @@ async function getDailyTime():Promise<number>
 /** trigger reset of daily time. generates a new reset time in the future */
 async function resetTime():Promise<void>
 {
+    console.log("daily reset happening");
+
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
 
@@ -45,7 +47,7 @@ async function resetTime():Promise<void>
 
 /** check if should reset the daily time due to being past the reset date. if so,
  *  do the reset. */
-async function checkResetTime():Promise<void>
+export async function checkResetTime():Promise<void>
 {
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);

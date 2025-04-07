@@ -3,6 +3,7 @@ import {onMount} from "svelte";
 import {setDriftlessInterval,clearDriftless} from "driftless";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
+import {addToDailyTime, checkResetTime, storageDefault} from "@/lib/storage";
 // import {test_wentPastDate} from "@/lib/storage";
 
 // --- config
@@ -19,6 +20,11 @@ const createTime:Date=new Date();
 
 /** the main ticker */
 var tickerTimer:number|null=null;
+
+/** ticker for dailytime, to be emptied into the storage every so often. in seconds */
+var dailyTimeCounter:number=0;
+/** when daily time counter reaches this, push into daily time storage */
+const dailyTimeCounterPushInterval:number=30;
 
 // --- state
 /** total time tab has been active for */
@@ -101,8 +107,10 @@ function startTimer():void
     // this timer is safe to be destroyed anytime, and should be destroyed
     // when the tab is not active. it does not need to tick in an inactive
     // tab.
-    tickerTimer=setDriftlessInterval(()=>{
+    tickerTimer=setDriftlessInterval(async ()=>{
         console.log("timer:",activeSecondsSinceNotify,"/",notificationTime);
+
+        console.log("storage",await chrome.storage.local.get(storageDefault));
 
         if (disabled)
         {
@@ -122,6 +130,16 @@ function startTimer():void
         {
             totalActiveSeconds++;
             activeSecondsSinceNotify++;
+            dailyTimeCounter++;
+
+            // daily time counter accumulated enough to push. push to storage
+            if (dailyTimeCounter>=dailyTimeCounterPushInterval)
+            {
+                // potentially reset the daily time first
+                await checkResetTime();
+                await addToDailyTime(dailyTimeCounter);
+                dailyTimeCounter=0;
+            }
         }
 
         // trigger notify once time since last notify above the notify time,
