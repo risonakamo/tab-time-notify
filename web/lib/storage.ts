@@ -52,7 +52,7 @@ export async function checkResetTime():Promise<void>
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
 
-    if (new Date().getTime()>=storage.resetTime.getTime())
+    if (new Date().getTime()>=new Date(storage.resetTime).getTime())
     {
         return resetTime();
     }
@@ -77,7 +77,7 @@ function wentPastDate(
 
 /** generate the daily reset date at the given time hour. this time hour will always
  *  be in the future */
-function generateResetTime(hour:number):Date
+function generateResetTime(hour:number):string
 {
     const resetDate:Date=new Date();
     resetDate.setHours(hour,0,0,0);
@@ -87,7 +87,7 @@ function generateResetTime(hour:number):Date
         resetDate.setDate(resetDate.getDate()+1);
     }
 
-    return resetDate;
+    return resetDate.toISOString();
 }
 
 

@@ -5,5 +5,5 @@ interface ExtStorage
     dailyTime:number
 
     /** time reset should occur */
-    resetTime:Date
+    resetTime:string
 }

@@ -13,6 +13,9 @@ const maxNotificationTime:number=4*60;
 // const minNotificationTime:number=2;
 // const maxNotificationTime:number=3;
 
+/** when daily time counter reaches this, push into daily time storage */
+const dailyTimeCounterPushInterval:number=30;
+
 
 // --- other const
 /** time tab was created */
@@ -23,8 +26,7 @@ var tickerTimer:number|null=null;
 
 /** ticker for dailytime, to be emptied into the storage every so often. in seconds */
 var dailyTimeCounter:number=0;
-/** when daily time counter reaches this, push into daily time storage */
-const dailyTimeCounterPushInterval:number=30;
+
 
 // --- state
 /** total time tab has been active for */
