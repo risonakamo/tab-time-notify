@@ -133,7 +133,7 @@ function startTimer():void
     tickerTimer=setDriftlessInterval(async ()=>{
         console.log("timer:",activeSecondsSinceNotify,"/",notificationTime);
 
-        printStorage();
+        // printStorage();
 
         if (disabled)
         {
