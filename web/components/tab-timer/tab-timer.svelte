@@ -308,11 +308,13 @@ function onReset():void
 
             <div class="button-row">
                 <div class="button-22 half first" onclick={onReset}>
-                    Dismiss (reset)
+                    Reset
                 </div>
 
-                <div class="button-22 half" onclick={onDismissForever}>
-                    Dismiss Forever
+                <div class="button-22 half" onclick={onDismissForever}
+                    title="Prevents timer from reappearing"
+                >
+                    Close
                 </div>
             </div>
         </div>
