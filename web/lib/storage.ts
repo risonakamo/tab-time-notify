@@ -4,26 +4,28 @@
 const ResetHour:number=6;
 
 /** storage initial state */
-export const storageDefault:ExtStorage={
+const storageDefault:ExtStorage={
     dailyTime:0,
 
     // initialise reset time to some time in the future
     resetTime:generateResetTime(ResetHour),
 };
 
-/** add to daily time value of storage */
-export async function addToDailyTime(amount:number):Promise<void>
+/** add to daily time value of storage. returns new value of daily time */
+export async function addToDailyTime(amount:number):Promise<number>
 {
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
 
     storage.dailyTime+=amount;
 
-    return chrome.storage.local.set(storage);
+    chrome.storage.local.set(storage);
+
+    return storage.dailyTime;
 }
 
 /** get the current daily time */
-async function getDailyTime():Promise<number>
+export async function getDailyTime():Promise<number>
 {
     const storage:ExtStorage=await chrome.storage
         .local.get(storageDefault);
@@ -56,6 +58,16 @@ export async function checkResetTime():Promise<void>
     {
         return resetTime();
     }
+}
+
+/** debug print storage */
+export async function printStorage():Promise<void>
+{
+    const storage:ExtStorage=await chrome.storage
+        .local.get(storageDefault);
+
+    storage.resetTime=new Date(storage.resetTime) as any;
+    console.log("storage:",storage);
 }
 
 /** given 2 dates and a target date, determine if within this time span,

@@ -3,18 +3,19 @@ import {onMount} from "svelte";
 import {setDriftlessInterval,clearDriftless} from "driftless";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
-import {addToDailyTime, checkResetTime, storageDefault} from "@/lib/storage";
-// import {test_wentPastDate} from "@/lib/storage";
+import {addToDailyTime, checkResetTime, getDailyTime, printStorage} from "@/lib/storage";
 
 // --- config
 // notification will occur after a random amount of seconds
-const minNotificationTime:number=3*60;
-const maxNotificationTime:number=4*60;
-// const minNotificationTime:number=2;
-// const maxNotificationTime:number=3;
+// const minNotificationTime:number=3*60;
+// const maxNotificationTime:number=4*60;
+const minNotificationTime:number=2;
+const maxNotificationTime:number=3;
 
-/** when daily time counter reaches this, push into daily time storage */
-const dailyTimeCounterPushInterval:number=30;
+// interval for daily time push
+const minDailyTimePushInterval:number=8;
+const maxDailyTimePushInterval:number=20;
+
 
 
 // --- other const
@@ -26,6 +27,9 @@ var tickerTimer:number|null=null;
 
 /** ticker for dailytime, to be emptied into the storage every so often. in seconds */
 var dailyTimeCounter:number=0;
+
+/** when daily time counter reaches this, push into daily time storage */
+var dailyTimeCounterPushInterval:number=30;
 
 
 // --- state
@@ -55,15 +59,18 @@ var notificationsDismissed:number=$state(0);
 /** if this timer is fully disabled */
 var disabled:boolean=$state(false);
 
+var dailyTimeText:string=$state("00:00");
+
 
 // --- derived
 // text versions of various timers
 var activeSinceNotifyText:string=$derived(secondsToDuration(activeSecondsSinceNotify));
 var totalActiveText:string=$derived(secondsToDuration(totalActiveSeconds));
 
-// generate a notification time. then, if the document is showing,
-// start the ticker
-onMount(()=>{
+// - generate a notification time. then, if the document is showing,
+//   start the ticker.
+// - grab the daily time and set the value. also check for daily reset
+onMount(async ()=>{
     generateNotificationTime();
 
     if (!document.hidden)
@@ -71,7 +78,8 @@ onMount(()=>{
         startTimer();
     }
 
-    // test_wentPastDate();
+    checkResetTime();
+    dailyTimeText=secondsToDuration(await getDailyTime());
 });
 
 
@@ -112,7 +120,7 @@ function startTimer():void
     tickerTimer=setDriftlessInterval(async ()=>{
         console.log("timer:",activeSecondsSinceNotify,"/",notificationTime);
 
-        console.log("storage",await chrome.storage.local.get(storageDefault));
+        printStorage();
 
         if (disabled)
         {
@@ -134,12 +142,12 @@ function startTimer():void
             activeSecondsSinceNotify++;
             dailyTimeCounter++;
 
-            // daily time counter accumulated enough to push. push to storage
+            // daily time counter accumulated enough to push. push to storage.
             if (dailyTimeCounter>=dailyTimeCounterPushInterval)
             {
                 // potentially reset the daily time first
                 await checkResetTime();
-                await addToDailyTime(dailyTimeCounter);
+                dailyTimeText=secondsToDuration(await addToDailyTime(dailyTimeCounter));
                 dailyTimeCounter=0;
             }
         }
@@ -263,7 +271,7 @@ function onReset():void
         <div class="timer-zone">
             <p class="label">Watchtime for today...</p>
             <div class="timer">
-                20:00
+                {dailyTimeText}
             </div>
         </div>
         <div class="mini-stats">
