@@ -29,7 +29,7 @@ var tickerTimer:number|null=null;
 var dailyTimeCounter:number=0;
 
 /** when daily time counter reaches this, push into daily time storage */
-var dailyTimeCounterPushInterval:number=30;
+var dailyTimeCounterPushInterval:number=-1;
 
 
 // --- state
@@ -73,13 +73,14 @@ var totalActiveText:string=$derived(secondsToDuration(totalActiveSeconds));
 onMount(async ()=>{
     generateNotificationTime();
 
+    checkResetTime();
+    generateDailyTimePushInterval();
+    dailyTimeText=secondsToDuration(await getDailyTime());
+
     if (!document.hidden)
     {
         startTimer();
     }
-
-    checkResetTime();
-    dailyTimeText=secondsToDuration(await getDailyTime());
 });
 
 
@@ -91,6 +92,15 @@ function generateNotificationTime():void
         (maxNotificationTime-minNotificationTime)+minNotificationTime;
 
     notificationTime=Math.floor(randSeconds);
+}
+
+/** generate and set new daily time push interval */
+function generateDailyTimePushInterval():void
+{
+    const randSeconds:number=Math.random()*
+        (maxDailyTimePushInterval-minDailyTimePushInterval)+minDailyTimePushInterval;
+
+    dailyTimeCounterPushInterval=Math.floor(randSeconds);
 }
 
 /** trigger notification. sets window to be showing, and notification is active */
@@ -143,12 +153,15 @@ function startTimer():void
             dailyTimeCounter++;
 
             // daily time counter accumulated enough to push. push to storage.
-            if (dailyTimeCounter>=dailyTimeCounterPushInterval)
+            if (dailyTimeCounterPushInterval>0
+                &&dailyTimeCounter>=dailyTimeCounterPushInterval
+            )
             {
                 // potentially reset the daily time first
                 await checkResetTime();
                 dailyTimeText=secondsToDuration(await addToDailyTime(dailyTimeCounter));
                 dailyTimeCounter=0;
+                generateDailyTimePushInterval();
             }
         }
 

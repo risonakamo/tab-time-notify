@@ -4,7 +4,7 @@
   "scripts": {
     "b": "vite build -w false",
     "w": "vite build -w true",
-    "check":"svelte-check --threshold error"
+    "check": "svelte-check --threshold error"
   },
   "type": "module",
   "dependencies": {
@@ -12,7 +12,9 @@
     "@tsconfig/svelte": "^5.0.4",
     "@types/chrome": "^0.0.309",
     "@types/driftless": "^2.0.4",
+    "@types/humanize-duration": "^3.27.4",
     "driftless": "^2.0.3",
+    "humanize-duration": "^3.32.1",
     "rollup": "^4.36.0",
     "sass": "^1.86.0",
     "svelte": "^5.23.2",
