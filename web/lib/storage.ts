@@ -70,6 +70,12 @@ export async function printStorage():Promise<void>
     console.log("storage:",storage);
 }
 
+/** reset storage */
+export function resetStorage():void
+{
+    chrome.storage.local.clear();
+}
+
 /** given 2 dates and a target date, determine if within this time span,
  *  the target date was passed */
 function wentPastDate(

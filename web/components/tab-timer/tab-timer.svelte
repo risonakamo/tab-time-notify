@@ -1,16 +1,17 @@
 <script lang="ts">
 import {onMount} from "svelte";
 import {setDriftlessInterval,clearDriftless} from "driftless";
+import humanizeDuration from "humanize-duration";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
-import {addToDailyTime, checkResetTime, getDailyTime, printStorage} from "@/lib/storage";
+import {addToDailyTime, checkResetTime, getDailyTime, printStorage, resetStorage} from "@/lib/storage";
 
 // --- config
 // notification will occur after a random amount of seconds
-// const minNotificationTime:number=3*60;
-// const maxNotificationTime:number=4*60;
-const minNotificationTime:number=2;
-const maxNotificationTime:number=3;
+const minNotificationTime:number=3*60;
+const maxNotificationTime:number=4*60;
+// const minNotificationTime:number=2;
+// const maxNotificationTime:number=3;
 
 // interval for daily time push
 const minDailyTimePushInterval:number=8;
@@ -59,7 +60,7 @@ var notificationsDismissed:number=$state(0);
 /** if this timer is fully disabled */
 var disabled:boolean=$state(false);
 
-var dailyTimeText:string=$state("00:00");
+var dailyTimeText:string=$state("");
 
 
 // --- derived
@@ -75,12 +76,14 @@ onMount(async ()=>{
 
     checkResetTime();
     generateDailyTimePushInterval();
-    dailyTimeText=secondsToDuration(await getDailyTime());
+    dailyTimeText=humanizeDuration(await getDailyTime()*1000);
 
     if (!document.hidden)
     {
         startTimer();
     }
+
+    (window as any).resetStorage=resetStorage;
 });
 
 
@@ -159,7 +162,7 @@ function startTimer():void
             {
                 // potentially reset the daily time first
                 await checkResetTime();
-                dailyTimeText=secondsToDuration(await addToDailyTime(dailyTimeCounter));
+                dailyTimeText=humanizeDuration(await addToDailyTime(dailyTimeCounter)*1000);
                 dailyTimeCounter=0;
                 generateDailyTimePushInterval();
             }
@@ -283,7 +286,7 @@ function onReset():void
         </div>
         <div class="timer-zone">
             <p class="label">Watchtime for today...</p>
-            <div class="timer">
+            <div class="timer smaller">
                 {dailyTimeText}
             </div>
         </div>
