@@ -4,7 +4,7 @@
 export function secondsToDuration(seconds:number):string
 {
     const hours:number=Math.floor(seconds/3600);
-    const mins:number=Math.floor(seconds/60);
+    const mins:number=Math.floor((seconds%3600)/60);
     const remainingSeconds:number=Math.floor(seconds%60);
 
     const minsText:string=mins.toString().padStart(2,"0");

@@ -1,7 +1,7 @@
 <script lang="ts">
 import {onMount} from "svelte";
 import {setDriftlessInterval,clearDriftless} from "driftless";
-import humanizeDuration from "humanize-duration";
+import humanizeDuration, {Humanizer} from "humanize-duration";
 
 import {secondsToDuration, timeDiff} from "@/lib/time";
 import {addToDailyTime, checkResetTime, getDailyTime, printStorage, resetStorage} from "@/lib/storage";
@@ -12,6 +12,11 @@ const minNotificationTime:number=3*60;
 const maxNotificationTime:number=4*60;
 // const minNotificationTime:number=2;
 // const maxNotificationTime:number=3;
+
+const humaniser:Humanizer=humanizeDuration.humanizer({
+    units:["h","m"],
+    maxDecimalPoints:1,
+});
 
 // interval for daily time push
 const minDailyTimePushInterval:number=8;
@@ -76,7 +81,7 @@ onMount(async ()=>{
 
     checkResetTime();
     generateDailyTimePushInterval();
-    dailyTimeText=humanizeDuration(await getDailyTime()*1000);
+    dailyTimeText=humaniser(await getDailyTime()*1000);
 
     if (!document.hidden)
     {
@@ -162,7 +167,7 @@ function startTimer():void
             {
                 // potentially reset the daily time first
                 await checkResetTime();
-                dailyTimeText=humanizeDuration(await addToDailyTime(dailyTimeCounter)*1000);
+                dailyTimeText=humaniser(await addToDailyTime(dailyTimeCounter)*1000);
                 dailyTimeCounter=0;
                 generateDailyTimePushInterval();
             }
